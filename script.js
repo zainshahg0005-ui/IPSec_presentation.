@@ -1,8 +1,8 @@
 /**
- * Main Application Logic:
- * - Theme Switcher
- * - 3-Dot Slide-Out Navigation Menu
- * - Form Submission Handler
+ * Main Application Logic
+ * - Dark/Light Theme Switching Coordinator
+ * - Slide-out Navigation Drawer & Topic Redirection
+ * - Contact Form Handler
  */
 
 document.addEventListener('DOMContentLoaded', () => {

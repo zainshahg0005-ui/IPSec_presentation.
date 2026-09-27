@@ -1,9 +1,9 @@
 /**
- * Multi-Mode 3D Cybersecurity Scene Switcher
- * Features 3 Switchable Animations:
+ * Multi-Mode 3D Cybersecurity Scene Engine
+ * Features 3 Switchable Animations with Mobile Touch Support:
  * 1. Cybersecurity Core (Geometric Wireframe Shield)
  * 2. Cyber Matrix Tunnel (Infinite Wireframe Tunnel)
- * 3. Quantum Encryption Cube (3D Rotating Wireframe Matrix)
+ * 3. Quantum Encryption Cube (3D Wireframe Hypercube Matrix)
  */
 
 (function () {
@@ -16,7 +16,7 @@
     const windowHalfX = window.innerWidth / 2;
     const windowHalfY = window.innerHeight / 2;
 
-    // Active animation mode tracking: 'core', 'tunnel', or 'cube'
+    // Active mode tracking: 'core', 'tunnel', or 'cube'
     let currentMode = 'core';
     let activeObjects = [];
 
@@ -52,7 +52,9 @@
 
         renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        
+        // Cap pixel ratio to max 1.5 to optimize GPU and battery life on high-DPI mobile screens
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
 
         // Lighting Setup
         const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
@@ -72,10 +74,11 @@
         // Build Default Scene
         buildCurrentScene();
 
-        // Listeners
+        // Mouse and Touch Event Listeners
         window.addEventListener('resize', onWindowResize);
         document.addEventListener('mousemove', onMouseMove);
-        window.addEventListener('themeChanged', (e) => updateSceneTheme(e.detail.theme));
+        document.addEventListener('touchmove', onTouchMove, { passive: true });
+        window.addEventListener('themeChanged', () => updateSceneTheme());
     }
 
     /**
@@ -109,7 +112,6 @@
     function buildSecurityCore(colors, theme) {
         camera.position.set(0, 0, 5.2);
 
-        // Core Icosahedron
         const coreGeo = new THREE.IcosahedronGeometry(2.1, 1);
         const coreMat = new THREE.MeshPhongMaterial({
             color: colors.primary,
@@ -122,7 +124,6 @@
         scene.add(coreMesh);
         activeObjects.push(coreMesh);
 
-        // Outer Shield
         const shieldGeo = new THREE.OctahedronGeometry(3.2, 2);
         const shieldMat = new THREE.MeshStandardMaterial({
             color: colors.secondary,
@@ -135,7 +136,6 @@
         scene.add(shieldMesh);
         activeObjects.push(shieldMesh);
 
-        // Orbital Ring
         const ringGeo = new THREE.TorusGeometry(3.8, 0.025, 16, 100);
         const ringMat = new THREE.MeshBasicMaterial({ color: colors.secondary, transparent: true, opacity: 0.6 });
         const ringMesh = new THREE.Mesh(ringGeo, ringMat);
@@ -144,7 +144,7 @@
         scene.add(ringMesh);
         activeObjects.push(ringMesh);
 
-        addBackgroundParticles(colors, 800);
+        addBackgroundParticles(colors, 700);
     }
 
     /* --------------------------------------------------------------------------
@@ -174,7 +174,7 @@
         scene.add(tunnelGroup);
         activeObjects.push(tunnelGroup);
 
-        addBackgroundParticles(colors, 600);
+        addBackgroundParticles(colors, 500);
     }
 
     /* --------------------------------------------------------------------------
@@ -186,7 +186,6 @@
         const cubeGroup = new THREE.Group();
         cubeGroup.name = 'cubeGroup';
 
-        // Outer Wireframe Box
         const outerGeo = new THREE.BoxGeometry(3.2, 3.2, 3.2);
         const outerMat = new THREE.MeshPhongMaterial({
             color: colors.primary,
@@ -197,7 +196,6 @@
         const outerCube = new THREE.Mesh(outerGeo, outerMat);
         cubeGroup.add(outerCube);
 
-        // Inner Rotating Wireframe Core Box
         const innerGeo = new THREE.BoxGeometry(2.0, 2.0, 2.0);
         const innerMat = new THREE.MeshStandardMaterial({
             color: colors.secondary,
@@ -209,7 +207,6 @@
         innerCube.name = 'innerCube';
         cubeGroup.add(innerCube);
 
-        // Nested Center Node
         const coreNodeGeo = new THREE.OctahedronGeometry(0.9, 1);
         const coreNodeMat = new THREE.MeshBasicMaterial({
             color: colors.primary,
@@ -222,7 +219,7 @@
         scene.add(cubeGroup);
         activeObjects.push(cubeGroup);
 
-        addBackgroundParticles(colors, 700);
+        addBackgroundParticles(colors, 600);
     }
 
     function addBackgroundParticles(colors, count) {
@@ -249,10 +246,9 @@
     }
 
     /**
-     * UI Control Switcher Widget
+     * UI Mode Switcher Widget
      */
     function createUIControls() {
-        // Remove existing widget if re-rendered
         const existing = document.querySelector('.scene-switcher-widget');
         if (existing) existing.remove();
 
@@ -280,6 +276,13 @@
     function onMouseMove(event) {
         mouseX = (event.clientX - windowHalfX) / 80;
         mouseY = (event.clientY - windowHalfY) / 80;
+    }
+
+    function onTouchMove(event) {
+        if (event.touches.length > 0) {
+            mouseX = (event.touches[0].clientX - windowHalfX) / 80;
+            mouseY = (event.touches[0].clientY - windowHalfY) / 80;
+        }
     }
 
     function onWindowResize() {
@@ -352,7 +355,7 @@
             bgParticles.rotation.y = elapsedTime * 0.02;
         }
 
-        // Mouse Parallax Follow
+        // Parallax Camera Interpolation
         targetX += (mouseX - targetX) * 0.05;
         targetY += (mouseY - targetY) * 0.05;
 
