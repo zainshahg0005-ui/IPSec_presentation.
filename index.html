@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPsec and Virtual Private Networks (VPNs)</title>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- 3D Canvas Background -->
+    <canvas id="three-canvas"></canvas>
+
+    <!-- Overlay Grid Pattern -->
+    <div class="grid-overlay"></div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="#" class="nav-logo">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>IP<span class="highlight">SEC</span> & VPN</span>
+        </a>
+
+        <div class="nav-controls">
+            <!-- Theme Toggle Button -->
+            <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Theme">
+                <i class="fa-solid fa-sun icon-sun"></i>
+                <i class="fa-solid fa-moon icon-moon"></i>
+            </button>
+
+            <!-- 3-Dot Menu Trigger Button -->
+            <button id="menu-toggle" class="menu-dots-btn" aria-label="Toggle Menu">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Slide-out Navigation Drawer -->
+    <div id="nav-drawer" class="nav-drawer">
+        <div class="drawer-header">
+            <span class="drawer-title"><i class="fa-solid fa-list-ul text-accent"></i> TOPIC INDEX</span>
+            <button id="drawer-close" class="drawer-close-btn">&times;</button>
+        </div>
+        <ul class="drawer-menu">
+            <li><a href="#what-is-a-vpn"><span class="num">01.</span> What a VPN Is</a></li>
+            <li><a href="#vpn-types"><span class="num">02.</span> Primary VPN Types</a></li>
+            <li><a href="#vpn-vs-proxy"><span class="num">03.</span> VPN vs. Proxy</a></li>
+            <li><a href="#what-is-ipsec"><span class="num">04.</span> What IPsec Is</a></li>
+            <li><a href="#ipsec-modes"><span class="num">05.</span> IPsec Operational Modes</a></li>
+            <li><a href="#connection-diagram"><span class="num">06.</span> Connection Architecture</a></li>
+            <li><a href="#benefits-and-limitations"><span class="num">07.</span> Benefits & Limitations</a></li>
+            <li><a href="#ipsec-vs-tls"><span class="num">08.</span> IPsec vs. TLS VPNs</a></li>
+            <li><a href="#real-world-example"><span class="num">09.</span> Real-World Scenario</a></li>
+            <li><a href="#conclusion"><span class="num">10.</span> Conclusion</a></li>
+            <li><a href="#contact" class="drawer-contact-link"><i class="fa-solid fa-paper-plane"></i> Contact Me</a></li>
+        </ul>
+    </div>
+
+    <!-- Backdrop overlay when drawer is open -->
+    <div id="drawer-overlay" class="drawer-overlay"></div>
+
+    <!-- Main Content -->
+    <main class="content-container">
+
+        <!-- Presentation Header / Hero Banner -->
+        <header class="hero-header glass-card">
+            <div class="badge"><i class="fa-solid fa-graduation-cap"></i> ACADEMIC PRESENTATION</div>
+            <h1 class="hero-title">IPsec & Virtual Private Networks (<span class="text-accent">VPNs</span>)</h1>
+            <p class="hero-subtitle">An Academic Presentation on Network-Layer Security, Protocol Suites, and Cryptographic Encryption</p>
+        </header>
+
+        <!-- Topic 1: What a VPN is -->
+        <article id="what-is-a-vpn" class="glass-card article-section">
+            <header class="article-header">
+                <h2><i class="fa-solid fa-network-wired text-accent"></i> 1. What a VPN Is & The Problem It Solves</h2>
+            </header>
+            <div class="grid-2col">
+                <section class="info-block">
+                    <h3><i class="fa-solid fa-key"></i> Definition</h3>
+                    <p>A Virtual Private Network (VPN) creates a secure, encrypted "tunnel" across an untrusted public network, such as the internet.</p>
+                </section>
+                <section class="info-block">
+                    <h3><i class="fa-solid fa-user-shield"></i> The Core Problem</h3>
+                    <p>Data transmitted over public networks travels in plain text or minimally protected formats, making it vulnerable to eavesdropping, packet sniffing, and Man-in-the-Middle (MitM) attacks. A VPN guarantees that even if someone intercepts your traffic, they only see unreadable ciphertext.</p>
+                </section>
+            </div>
+            <section class="info-block full-width mt-4">
+                <h3><i class="fa-solid fa-diagram-project"></i> Common Uses</h3>
+                <ul class="styled-list">
+                    <li><strong>Remote Access:</strong> Connecting remote or work-from-home employees securely to internal corporate applications and file servers.</li>
+                    <li><strong>Connecting Networks:</strong> Securely linking separate physical office networks (e.g., connecting a branch office to headquarters) over the public internet.</li>
+                </ul>
+            </section>
+        </article>
+
+        <!-- Topic 2: VPN Types -->
+        <article id="vpn-types" class="glass-card article-section">
+            <header class="article-header">
+                <h2><i class="fa-solid fa-sitemap text-accent"></i> 2. Primary VPN Types</h2>
+            </header>
+            <div class="grid-2col">
+                <section class="info-block">
+                    <h3><i class="fa-solid fa-laptop"></i> Remote-Access VPN</h3>
+                    <p>Connects an individual user's device (laptop, smartphone) to a corporate network. It requires client software or built-in operating system tools on the user's endpoint to initiate the encrypted tunnel to the company gateway.</p>
+                </section>
+                <section class="info-block">
+                    <h3><i class="fa-solid fa-building-user"></i> Site-to-Site VPN</h3>
+                    <p>Connects two entire local area networks (LANs) together over the internet using router-to-router or firewall-to-firewall setups. End users on either network do not need special client software installed.</p>
+                </section>
+            </div>
+            <section class="figure-container mt-4">
+                <figure class="media-frame">
+                    <img src="picture/vpn_topology.jfif" alt="Site-to-Site and Remote Access VPN Topologies" class="responsive-img">
+                    <figcaption><i class="fa-solid fa-image"></i> Figure 1: VPN Network Topologies (Site-to-Site & Remote Access)</figcaption>
+                </figure>
+            </section>
+        </article>
+
+        <!-- Topic 3: VPN vs Proxy -->
+        <article id="vpn-vs-proxy" class="glass-card article-section">
+            <header class="article-header">
+                <h2><i class="fa-solid fa-right-left text-accent"></i> 3. How a VPN Differs from a Proxy</h2>
+            </header>
+            <section>
+                <dl class="styled-dl">
+                    <div class="dl-group">
+                        <dt><strong>VPN (Network Layer - Layer 3)</strong></dt>
+                        <dd>Encrypts all system traffic coming from the entire operating system, including background services, system updates, and email clients.</dd>
+                    </div>
+                    <div class="dl-group">
+                        <dt><strong>Proxy (Application Layer - Layer 7)</strong></dt>
+                        <dd>Operates primarily at the application level. It reroutes traffic for specific applications (like a web browser) and masks the IP address, but generally does not encrypt system-wide network traffic by default.</dd>
+                    </div>
+                </dl>
+            </section>
+        </article>
+
+        <!-- Topic 4 & 5: What IPsec Is and How It Works -->
+        <article id="what-is-ipsec" class="glass-card article-section">
+            <header class="article-header">
+                <h2><i class="fa-solid fa-lock text-accent"></i> 4. What IPsec Is & How It Works</h2>
+            </header>
+            <section class="info-block mb-4">
+                <p>IPsec (Internet Protocol Security) is a standardized suite of open protocols developed by the IETF to secure IP communications at the <strong>Network Layer (Layer 3)</strong> of the OSI model.</p>
+            </section>
+            <div class="grid-2col">
+                <section class="info-block">
+                    <h3><i class="fa-solid fa-shield-cat"></i> Core Security Services Provided</h3>
+                    <ul class="styled-list">
+                        <li><strong>Confidentiality:</strong> Encrypts data payloads to prevent unauthorized interception.</li>
+                        <li><strong>Integrity:</strong> Uses cryptographic hashing (HMAC-SHA2) to ensure data is not altered in transit.</li>
+                        <li><strong>Authentication:</strong> Verifies the identity of both endpoints before exchanging data.</li>
+                        <li><strong>Replay Protection:</strong> Uses sequence numbers to prevent attackers from retransmitting valid data packets.</li>
+                    </ul>
+                </section>
+                <section class="info-block">
+                    <h3><i class="fa-solid fa-cubes"></i> Key Protocols</h3>
+                    <dl class="styled-dl">
+                        <dt><strong>IKE / IKEv2 (Internet Key Exchange):</strong></dt>
+                        <dd>Manages identity authentication, negotiates security parameters, and generates shared keys.</dd>
+                        <dt><strong>ESP (Encapsulating Security Payload):</strong></dt>
+                        <dd>Provides encryption, integrity verification, data-origin authentication, and anti-replay protection.</dd>
+                        <dt><strong>AH (Authentication Header):</strong></dt>
+                        <dd>Provides authentication and integrity, but <em>no encryption</em>. Rarely used today as it breaks passing through NAT devices.</dd>
+                    </dl>
+                </section>
+            </div>
+            <section class="figure-container mt-4">
+                <figure class="media-frame">
+                    <img src="picture/ipsec_architecture.jfif" alt="IPsec Architecture Diagram showing ESP, AH, and Key Management" class="responsive-img">
+                    <figcaption><i class="fa-solid fa-image"></i> Figure 2: High-Level Architecture of the IPsec Protocol Suite</figcaption>
+                </figure>
+            </section>
+        </article>
+
+        <!-- Topic 6: IPsec Modes -->
+        <article id="ipsec-modes" class="glass-card article-section">
+            <header class="article-header">
+                <h2><i class="fa-solid fa-sliders text-accent"></i> 5. IPsec Operational Modes</h2>
+            </header>
+            <div class="grid-2col">
+                <section class="info-block">
+                    <h3><i class="fa-solid fa-file-code"></i> Transport Mode</h3>
+                    <p>Encrypts only the payload (the actual data layer) of the IP packet, leaving the original IP header unencrypted and visible. Typically used for host-to-host communication.</p>
+                </section>
+                <section class="info-block">
+                    <h3><i class="fa-solid fa-box-archive"></i> Tunnel Mode</h3>
+                    <p>Encrypts the entire original IP packet (both header and payload) and wraps it inside a brand-new outer IP header. Typically used for site-to-site VPNs and remote-access VPNs.</p>
+                </section>
+            </div>
+            <section class="figure-container mt-4">
+                <figure class="media-frame">
+                    <img src="picture/ipsec_modes.png" alt="Comparison between Transport Mode and Tunnel Mode" class="responsive-img">
+                    <figcaption><i class="fa-solid fa-image"></i> Figure 3: Operational Modes — Transport Mode vs. Tunnel Mode</figcaption>
+                </figure>
+            </section>
+        </article>
+
+        <!-- Topic 7: Connection Architecture -->
+        <article id="connection-diagram" class="glass-card article-section">
+            <header class="article-header">
+                <h2><i class="fa-solid fa-route text-accent"></i> 6. Simple Connection Architecture</h2>
+            </header>
+            <section>
+                <div class="terminal-container">
+                    <div class="terminal-header">
+                        <div class="window-controls">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                        <div class="window-title">DATA FLOW PROCESS MAP</div>
+                    </div>
+                    <div class="terminal-body">
+                        <figcaption class="mb-3"><strong>Step-by-Step Tunnel Flow: User Laptop to Corporate Intranet</strong></figcaption>
+                        <ol class="styled-steps">
+                            <li><strong>Laptop Client:</strong> Runs an IPsec VPN client and encrypts outgoing data locally.</li>
+                            <li><strong>Public Internet:</strong> Encrypted packets (ESP) travel over untrusted public routers safely.</li>
+                            <li><strong>Company VPN Gateway:</strong> Terminates the tunnel, decrypts traffic, and verifies packet integrity.</li>
+                            <li><strong>Internal Network:</strong> Decrypted packets are routed securely to internal company servers.</li>
+                        </ol>
+                    </div>
+                </div>
+            </section>
+        </article>
+
+        <!-- Topic 8: Benefits and Limitations -->
+        <article id="benefits-and-limitations" class="glass-card article-section">
+            <header class="article-header">
+                <h2><i class="fa-solid fa-scale-balanced text-accent"></i> 7. Benefits and Limitations</h2>
+            </header>
+            <div class="grid-2col">
+                <section class="info-block success-border">
+                    <h3 class="text-success"><i class="fa-solid fa-circle-check"></i> Benefits</h3>
+                    <ul class="styled-list">
+                        <li>Provides robust security, privacy, and packet integrity at Layer 3.</li>
+                        <li>Transparent to higher-level user applications.</li>
+                        <li>Enables standardized, secure network-to-network connectivity across multi-vendor equipment.</li>
+                    </ul>
+                </section>
+                <section class="info-block alert-border">
+                    <h3 class="text-alert"><i class="fa-solid fa-triangle-exclamation"></i> Limitations</h3>
+                    <ul class="styled-list">
+                        <li>High configuration and management complexity (SAs, policies, proposals).</li>
+                        <li>Performance latency and CPU overhead from cryptographic processing and enlarged packet headers.</li>
+                        <li>Does not stop application-level malware, phishing, or compromised user credentials once inside the perimeter.</li>
+                    </ul>
+                </section>
+            </div>
+        </article>
+
+        <!-- Topic 9: IPsec vs TLS VPNs -->
+        <article id="ipsec-vs-tls" class="glass-card article-section">
+            <header class="article-header">
+                <h2><i class="fa-solid fa-table-list text-accent"></i> 8. IPsec Compared with TLS-Based VPNs</h2>
+            </header>
+            <section class="table-responsive">
+                <table class="cyber-table">
+                    <caption>Comparison Matrix: IPsec VPN vs. TLS/SSL VPN</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Feature</th>
+                            <th scope="col">IPsec VPN</th>
+                            <th scope="col">TLS / SSL VPN</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">OSI Layer</th>
+                            <td>Layer 3 (Network Layer)</td>
+                            <td>Layer 4 to Layer 7 (Transport/Application Layers)</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Client Requirement</th>
+                            <td>Requires dedicated client software or OS configuration</td>
+                            <td>Accessible via standard web browsers or light clients</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Firewall Traversal</th>
+                            <td>Can struggle with NAT/firewalls (requires NAT-Traversal / UDP 4500)</td>
+                            <td>Easily traverses firewalls using standard HTTPS ports (TCP 443)</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Typical Deployment</th>
+                            <td>Site-to-Site connections and managed enterprise endpoints</td>
+                            <td>BYOD, remote contractors, and browser application access</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </article>
+
+        <!-- Topic 10: Real-World Example -->
+        <article id="real-world-example" class="glass-card article-section">
+            <header class="article-header">
+                <h2><i class="fa-solid fa-terminal text-accent"></i> 9. Real-World Walkthrough Scenario</h2>
+            </header>
+            <section>
+                <div class="terminal-container">
+                    <div class="terminal-header">
+                        <div class="window-controls">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                        <div class="window-title">EXECUTION TRACE // SECURE CONNECTION</div>
+                    </div>
+                    <div class="terminal-body">
+                        <p class="mb-3"><strong>Scenario:</strong> An employee sitting at a public coffee shop connects remotely to an organization's internal network.</p>
+                        <ol class="styled-steps">
+                            <li>The employee opens their laptop's VPN client and enters credentials along with a multi-factor authentication (MFA) code.</li>
+                            <li>Phase 1 (IKE Negotiation) executes a Diffie-Hellman exchange to authenticate the user and establish a secure control tunnel with the company firewall.</li>
+                            <li>Phase 2 negotiates symmetric encryption keys (e.g., AES-256) for the actual data tunnel.</li>
+                            <li>The employee accesses an internal company server. The VPN client wraps this request into an ESP packet and transmits it across the internet.</li>
+                            <li>The corporate VPN gateway receives the packet, decrypts it, verifies authenticity, and forwards it to the intranet server, returning the response back through the encrypted tunnel.</li>
+                        </ol>
+                    </div>
+                </div>
+            </section>
+        </article>
+
+        <!-- Topic 11: Conclusion -->
+        <article id="conclusion" class="glass-card article-section highlight-card">
+            <header class="article-header">
+                <h2><i class="fa-solid fa-flag-checkered text-accent"></i> 10. Conclusion</h2>
+            </header>
+            <section>
+                <p class="lead-text">VPNs serve as a primary defense for securing communication over untrusted public infrastructure. IPsec provides complete Network Layer protection—delivering confidentiality, integrity, authentication, and anti-replay protection through the combination of IKE key negotiation and ESP packet encryption.</p>
+            </section>
+        </article>
+
+        <!-- Contact Section -->
+        <article id="contact" class="glass-card article-section">
+            <header class="article-header">
+                <h2><i class="fa-solid fa-paper-plane text-accent"></i> Contact Me</h2>
+            </header>
+            <form class="contact-form" id="contact-form">
+                <div class="form-group">
+                    <label for="name">IDENTITY / NAME</label>
+                    <input type="text" id="name" required placeholder="Your Name or Alias">
+                </div>
+                <div class="form-group">
+                    <label for="email">SECURE EMAIL</label>
+                    <input type="email" id="email" required placeholder="entity@domain.sec">
+                </div>
+                <div class="form-group">
+                    <label for="message">TRANSMISSION</label>
+                    <textarea id="message" rows="4" required placeholder="Enter your message..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Transmit Message</button>
+            </form>
+        </article>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 LaSt ACADEMIC // Cyber Security Research . Encrypted Connection Active.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+    <script src="three-scene.js"></script>
+</body>
+</html>
